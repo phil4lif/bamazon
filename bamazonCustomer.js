@@ -56,15 +56,17 @@ function displayItems() {
                         //if there is not enough
                         console.log("Insufficient Quantity")
                     } else {
+                        var totalCost = howMany * res[0].price;
+                        console.log("Your order comes to a grand total of: " +totalCost);
                         var newStock = availProd - howMany;
-                        console.log(newStock);
+                        // console.log(newStock);
                         //if there is enough the transaction will be approved the database stock_quantity must be updated
-                        console.log("updating quantities in database");
+                        // console.log("updating quantities in database");
                         var query = connection.query(
                             `UPDATE products SET stock_quantity = '${newStock}' WHERE id = '${what}'`,
                             function (err, res) {
                                 if (err) throw err;
-                                console.log(res.affectedRows + " products updated!\n");
+                                // console.log(res.affectedRows + " products updated!\n");
                             }
                         );
 
