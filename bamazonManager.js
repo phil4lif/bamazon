@@ -33,6 +33,9 @@ function runApp() {
             case "View Low Inventory":
                 viewLowInventory();
                 break;
+            case "Add to Inventory":
+                addToInventory();
+                break;
             case "Exit":
                 connection.end();
                 break;
@@ -67,4 +70,35 @@ function viewLowInventory() {
             runApp();
         }
     )
+};
+function addToInventory() {
+    inquirer.prompt([
+        {
+            name:"whichItem",
+            message:"Please enter the id of the number that you would like to add to the inventory",
+            type: "input"
+        },
+        {
+            name:"howmany",
+            message:"Please enter the quantity that you would like to add to the existing inventory",
+            type:"input"
+        }
+    ]).then(function (answer){
+        var what = answer.whichItem;
+        var howMany = answer.howmany;
+        var newInventory ;
+        var query = connection.query(`SELECT * FROM products WHERE id = '${what}'`, function (err, res){
+            if (err) throw err;
+            console.log(res[0].stock_quantity);
+            newInventory = res[0].stock_quantity + howMany;
+        })
+        var query = connection.query(
+            `UPDATE products SET stock_quantity = '${newInventory}' WHERE id = '${what}'`,
+            function (err, res) {
+                if (err) throw err;
+                console.log(res.affectedRows + " products updated!\n");
+                runApp();
+            }
+        );
+    })
 }
