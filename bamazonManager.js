@@ -20,7 +20,7 @@ function runApp() {
         {
             name: "menu",
             type: "list",
-            choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product","Exit"],
+            choices: ["View Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product", "Exit"],
             message: "What would you like to do?"
         }
     ).then(function (answer) {
@@ -53,7 +53,7 @@ function displayItems() {
                 var log = "-------\nProduct ID: " + res[i].id + "\nName: " + res[i].product_name + "\nPrice: " + res[i].price;
                 console.log(log);
             }
-        runApp();
+            runApp();
         }
     )
 };
@@ -63,7 +63,7 @@ function viewLowInventory() {
         `SELECT * FROM products WHERE stock_quantity < 5`, function (err, res) {
             if (err) throw err;
             console.log("We have fewer than 5 in stock of the following...\n")
-            for (var i = 0; i <res.length; i++){
+            for (var i = 0; i < res.length; i++) {
                 var log = res[i].product_name;
                 console.log(log + "\n");
             }
@@ -74,31 +74,34 @@ function viewLowInventory() {
 function addToInventory() {
     inquirer.prompt([
         {
-            name:"whichItem",
-            message:"Please enter the id of the number that you would like to add to the inventory",
+            name: "whichItem",
+            message: "Please enter the id of the number that you would like to add to the inventory",
             type: "input"
         },
         {
-            name:"howmany",
-            message:"Please enter the quantity that you would like to add to the existing inventory",
-            type:"input"
+            name: "howmany",
+            message: "Please enter the quantity that you would like to add to the existing inventory",
+            type: "input"
         }
-    ]).then(function (answer){
+    ]).then(function (answer) {
         var what = answer.whichItem;
         var howMany = answer.howmany;
-        var newInventory ;
-        var query = connection.query(`SELECT * FROM products WHERE id = '${what}'`, function (err, res){
+        howMany = parseInt(howMany)
+        var newInventory;
+        var query = connection.query(`SELECT * FROM products WHERE id = '${what}'`, function (err, res) {
             if (err) throw err;
             console.log(res[0].stock_quantity);
             newInventory = res[0].stock_quantity + howMany;
+            console.log(newInventory);
+            var query = connection.query(
+                `UPDATE products SET stock_quantity = '${newInventory}' WHERE id = '${what}'`,
+                function (err, res) {
+                    if (err) throw err;
+                    console.log(res.affectedRows + " products updated!\n");
+                    runApp();
+                }
+            );
         })
-        var query = connection.query(
-            `UPDATE products SET stock_quantity = '${newInventory}' WHERE id = '${what}'`,
-            function (err, res) {
-                if (err) throw err;
-                console.log(res.affectedRows + " products updated!\n");
-                runApp();
-            }
-        );
+
     })
 }
