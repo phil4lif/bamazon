@@ -42,8 +42,8 @@ function runApp() {
                 addNewProduct();
                 break;
             case "Exit":
-                 connection.end();
-                return      
+                connection.end();
+                return
         }
     })
 }
@@ -57,10 +57,10 @@ function displayItems() {
             // for (var i = 0; i < res.length; i++) {
             //     var log = "-------\nProduct ID: " + res[i].id + "\nName: " + res[i].product_name + "\nPrice: " + res[i].price;
             //     console.log(log);
-        // }
+            // }
             //and then run the app again
             runApp();
-}
+        }
     )
 };
 //this function will log all the items that have fewer than 5 left in the stock_quantity

@@ -1,7 +1,7 @@
 //global variable requires
 var mysql = require("mysql");
 var inquirer = require("inquirer");
-var consoleTable = require("console.table");
+require("console.table");
 //my sql connection
 var connection = mysql.createConnection({
     host: "localhost",
