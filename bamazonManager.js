@@ -1,6 +1,7 @@
 //global variable requires
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+require("console.table")
 //my sql connection
 var connection = mysql.createConnection({
     host: "localhost",
@@ -41,8 +42,8 @@ function runApp() {
                 addNewProduct();
                 break;
             case "Exit":
-                connection.end();
-                break;
+                 connection.end();
+                return      
         }
     })
 }
@@ -52,13 +53,14 @@ function displayItems() {
     var query = connection.query(
         `SELECT * FROM products`, function (err, res) {
             if (err) throw err;
-            for (var i = 0; i < res.length; i++) {
-                var log = "-------\nProduct ID: " + res[i].id + "\nName: " + res[i].product_name + "\nPrice: " + res[i].price;
-                console.log(log);
-            }
+            console.table(res);
+            // for (var i = 0; i < res.length; i++) {
+            //     var log = "-------\nProduct ID: " + res[i].id + "\nName: " + res[i].product_name + "\nPrice: " + res[i].price;
+            //     console.log(log);
+        // }
             //and then run the app again
             runApp();
-        }
+}
     )
 };
 //this function will log all the items that have fewer than 5 left in the stock_quantity
@@ -113,7 +115,7 @@ function addToInventory() {
     })
 }
 //this function will allow the manager to add a completely new product to the store
-function addNewProduct(){
+function addNewProduct() {
     inquirer.prompt([
         {
             name: "what",
@@ -121,13 +123,13 @@ function addNewProduct(){
             type: "input"
         },
         {
-            name:"department",
+            name: "department",
             message: "Which department does this go in?",
             type: "input"
         },
         {
-            name:"price",
-            message:"How much is it for one?",
+            name: "price",
+            message: "How much is it for one?",
             type: "input"
         },
         {
@@ -135,13 +137,13 @@ function addNewProduct(){
             message: "How many of these do we have available?",
             type: "input"
         }
-    ]).then(function (answer){
-        var what= answer.what;
-        var dept= answer.department;
-        var price= answer.price;
+    ]).then(function (answer) {
+        var what = answer.what;
+        var dept = answer.department;
+        var price = answer.price;
         var inventory = answer.inventory;
         var query = connection.query(`INSERT INTO products (product_name, department_name, price, stock_quantity)
-        VALUES ('${what}', '${dept}', '${price}', '${inventory}')`, function(err, res){
+        VALUES ('${what}', '${dept}', '${price}', '${inventory}')`, function (err, res) {
             if (err) throw err;
             console.log("New product added to the database");
             //invoke the display items function so we can see that the new item has in fact been added to our database

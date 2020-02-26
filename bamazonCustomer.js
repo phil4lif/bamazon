@@ -1,6 +1,7 @@
 //global variable requires
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var consoleTable = require("console.table");
 //my sql connection
 var connection = mysql.createConnection({
     host: "localhost",
@@ -21,10 +22,12 @@ function displayItems() {
     var query = connection.query(
         `SELECT * FROM products`, function (err, res) {
             if (err) throw err;
-            for (var i = 0; i < res.length; i++) {
-                var log = "-------\nProduct ID: " + res[i].id + "\nName: " + res[i].product_name + "\nPrice: " + res[i].price;
-                console.log(log);
-            }
+
+            console.table(res)
+            // for (var i = 0; i < res.length; i++) {
+            //     var log = "-------\nProduct ID: " + res[i].id + "\nName: " + res[i].product_name + "\nPrice: " + res[i].price;
+            //     console.log(log);
+            // }
             //Now that the user has seen all of the available items, inquirer will ask them what they'd like to buy
             //and how many of that item they'd like to buy
             inquirer.prompt([
@@ -45,6 +48,10 @@ function displayItems() {
                 //a new query to the database that is looking for the item they've selected to purchase
                 var query = connection.query(`SELECT * FROM products WHERE id = '${what}'`, function (err, res) {
                     if (err) throw err;
+                    
+                    var deptName = res[0].department_name;
+                    console.log(deptName)
+
                     // console.log(res);
                     // console.log(res[0].product_name)
                     // console.log(res[0].stock_quantity + "  " +howMany)
@@ -55,9 +62,10 @@ function displayItems() {
                     if (howMany > availProd) {
                         //if there is not enough
                         console.log("Insufficient Quantity")
+                        displayItems();
                     } else {
                         var totalCost = howMany * res[0].price;
-                        console.log("Your order comes to a grand total of: " +totalCost);
+                        console.log("Your order comes to a grand total of: $" + totalCost);
                         var newStock = availProd - howMany;
                         // console.log(newStock);
                         //if there is enough the transaction will be approved the database stock_quantity must be updated
@@ -66,16 +74,28 @@ function displayItems() {
                             `UPDATE products SET stock_quantity = '${newStock}' WHERE id = '${what}'`,
                             function (err, res) {
                                 if (err) throw err;
+                                var query = connection.query(
+                                    `UPDATE departments SET product_sales = '${totalCost}' WHERE department_name = '${deptName}'`, function(err, res){
+                                        if (err) throw err;
+
+                                        console.table(res)
+                                    } 
+
+                                )
+                                console.log(query.sql)
                                 // console.log(res.affectedRows + " products updated!\n");
+                                displayItems();
                             }
                         );
 
-                        //and the user will see their order total cost
+
 
                     }
-                    connection.end()
+                    // connection.end()
                 }
                 )
             })
         })
+
+        console.log(query.sql)
 };
