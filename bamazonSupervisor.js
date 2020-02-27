@@ -40,19 +40,33 @@ function runApp() {
     });
 }
 function salesByDept() {
+    var totalProfit;
+    var profitArr = []
     var query = connection.query(`SELECT * FROM departments`, function (err, res) {
         if (err) throw err;
-        for (var i = 0; i < res.length; i++){
-            var totalProfit = res[i].product_sales - res[i].over_head_costs
-            console.log(totalProfit)
+        for (var i = 0; i < res.length; i++) {
+            totalProfit = res[i].product_sales - res[i].over_head_costs
+            // console.log(totalProfit)
+            profitArr.push(totalProfit);
         }
-        var query = connection.query(`ALTER TABLE departments ADD COLUMN AS total_profit`, function(err, res){
+        console.log(profitArr)
+
+        // console.log(totalProfit)
+        var query = connection.query(`CREATE TEMPORARY TABLE profits(id AUTO INCREMENT NOT NULL PRIMARY KEY, total_profits)`, function (err, res) {
             if (err) throw err;
-            var query = connection.query(`INSERT INTO departments total-profit = '${totalProfit}'`, function(err, res){
+            console.table(res)
+            var query = connection.query(`INSERT INTO profits(total_profits) = '${profitArr}' AS total_profit`, function (err, res) {
                 if (err) throw err;
-                console.table(res)
+                // console.table(res)
+                var query = connection.query(`SELECT * FROM departments INNER JOIN profits.total_profits`, function (err, res_){
+                    if (err) throw err;
+                    console.log("in")
+                    console.table(res);
+                })
             })
         })
+
+
         // console.table(res)
         runApp();
     });
@@ -70,10 +84,10 @@ function newDepartment() {
             message: "What is the overhead of this new department?",
             type: "number"
         }
-    ]).then(function (answer){
+    ]).then(function (answer) {
         var deptName = answer.department_name;
         var overHead = answer.over_head_costs;
-        var query = connection.query(`INSERT INTO departments (department_name, over_head_costs) VALUES('${deptName}', '${overHead}')`, function(err, res){
+        var query = connection.query(`INSERT INTO departments (department_name, over_head_costs) VALUES('${deptName}', '${overHead}')`, function (err, res) {
             if (err) throw err;
             console.log("New Department Added to Table")
             salesByDept();
