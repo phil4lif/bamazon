@@ -42,7 +42,18 @@ function runApp() {
 function salesByDept() {
     var query = connection.query(`SELECT * FROM departments`, function (err, res) {
         if (err) throw err;
-        console.table(res)
+        for (var i = 0; i < res.length; i++){
+            var totalProfit = res[i].product_sales - res[i].over_head_costs
+            console.log(totalProfit)
+        }
+        var query = connection.query(`ALTER TABLE departments ADD COLUMN AS total_profit`, function(err, res){
+            if (err) throw err;
+            var query = connection.query(`INSERT INTO departments total-profit = '${totalProfit}'`, function(err, res){
+                if (err) throw err;
+                console.table(res)
+            })
+        })
+        // console.table(res)
         runApp();
     });
 }

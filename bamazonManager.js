@@ -54,10 +54,6 @@ function displayItems() {
         `SELECT * FROM products`, function (err, res) {
             if (err) throw err;
             console.table(res);
-            // for (var i = 0; i < res.length; i++) {
-            //     var log = "-------\nProduct ID: " + res[i].id + "\nName: " + res[i].product_name + "\nPrice: " + res[i].price;
-            //     console.log(log);
-            // }
             //and then run the app again
             runApp();
         }

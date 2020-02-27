@@ -75,7 +75,7 @@ function displayItems() {
                             function (err, res) {
                                 if (err) throw err;
                                 var query = connection.query(
-                                    `UPDATE departments SET product_sales = '${totalCost}' WHERE department_name = '${deptName}'`, function(err, res){
+                                    `UPDATE departments SET product_sales = product_sales + '${totalCost}' WHERE department_name = '${deptName}'`, function(err, res){
                                         if (err) throw err;
 
                                         console.table(res)
