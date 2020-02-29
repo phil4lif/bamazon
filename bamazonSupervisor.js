@@ -43,6 +43,7 @@ function salesByDept() {
     var totalProfit;
     var profitArr = []
     var query = connection.query(`SELECT * FROM departments`, function (err, res) {
+        console.table(res)
         if (err) throw err;
         for (var i = 0; i < res.length; i++) {
             totalProfit = res[i].product_sales - res[i].over_head_costs
@@ -50,21 +51,25 @@ function salesByDept() {
             profitArr.push(totalProfit);
         }
         console.log(profitArr)
-
-        // console.log(totalProfit)
-        var query = connection.query(`CREATE TEMPORARY TABLE profits(id AUTO INCREMENT NOT NULL PRIMARY KEY, total_profits)`, function (err, res) {
+        var query = connection.query(`UPDATE departments SET total_profits = product_sales - over_head-costs`, function (err, res){
             if (err) throw err;
             console.table(res)
-            var query = connection.query(`INSERT INTO profits(total_profits) = '${profitArr}' AS total_profit`, function (err, res) {
-                if (err) throw err;
-                // console.table(res)
-                var query = connection.query(`SELECT * FROM departments INNER JOIN profits.total_profits`, function (err, res_){
-                    if (err) throw err;
-                    console.log("in")
-                    console.table(res);
-                })
-            })
         })
+
+        // console.log(totalProfit)
+        // var query = connection.query(`CREATE TEMPORARY TABLE profits(id AUTO INCREMENT NOT NULL PRIMARY KEY, total_profits)`, function (err, res) {
+        //     if (err) throw err;
+        //     console.table(res)
+        //     var query = connection.query(`INSERT INTO profits(total_profits) VALUES= '${profitArr}' AS total_profit`, function (err, res) {
+        //         if (err) throw err;
+        //         // console.table(res)
+        //         var query = connection.query(`SELECT * FROM departments INNER JOIN profits.total_profits`, function (err, res_){
+        //             if (err) throw err;
+        //             console.log("in")
+        //             console.table(res);
+        //         })
+        //     })
+        // })
 
 
         // console.table(res)

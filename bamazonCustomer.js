@@ -50,7 +50,7 @@ function displayItems() {
                     if (err) throw err;
                     
                     var deptName = res[0].department_name;
-                    console.log(deptName)
+                    // console.log(deptName)
 
                     // console.log(res);
                     // console.log(res[0].product_name)
@@ -78,11 +78,11 @@ function displayItems() {
                                     `UPDATE departments SET product_sales = product_sales + '${totalCost}' WHERE department_name = '${deptName}'`, function(err, res){
                                         if (err) throw err;
 
-                                        console.table(res)
+                                        // console.table(res)
                                     } 
 
                                 )
-                                console.log(query.sql)
+                                // console.log(query.sql)
                                 // console.log(res.affectedRows + " products updated!\n");
                                 displayItems();
                             }
@@ -97,5 +97,5 @@ function displayItems() {
             })
         })
 
-        console.log(query.sql)
+        // console.log(query.sql)
 };
