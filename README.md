@@ -16,3 +16,5 @@ The supervisor file will allow the user to view sales by department, which will 
 
 This application uses node, mySQL, and inquirer.
 
+Please see the following video for a walkthrough of the application
+https://drive.google.com/file/d/1_9wW9gLrP1aYhMscTmvjzT2aCXyZ6ZCT/view
