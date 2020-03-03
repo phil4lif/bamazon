@@ -8,11 +8,17 @@ To run the app, type `node bamazoncustomer.js`, `bamazonmanager.js`, or `bamazon
 Depending on which file is run the user will be prompted for some input.
 
 The customer is able to select an item and quantity to purchase, and then will be shown their order total.
+
 ![alt text](screenshots/bamazoncust.png "The Customer prompt")
 
+
 The Manager will have the option to view the table of everything for sale, to view products that are low on inventory, add to their inventory, or add an entirely new product to the database.
+
 ![alt text](screenshots/bamazonman.png "The Manager prompt")
+
+
 The supervisor file will allow the user to view sales by department, which will display a different table for the data base than the other users see, it also allows the supervisor to add a new departmet to the table.
+
 ![alt text](screenshots/bamazonsup.png "The Supervisor prompt")
 
 
